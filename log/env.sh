@@ -30,7 +30,7 @@ pip install opencv-python
 pip install joblib
 
 
------
+#-------------------------------------tcgs_env-------------------------------------
 
 module purge
 module load anaconda3/2024.02

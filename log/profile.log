@@ -50,3 +50,80 @@ psnrs= tensor(27.3802) [02/12 16:53:04]
 fps= tensor(35.3583) [02/12 16:53:04]
 time= tensor(0.0283) [02/12 16:53:04]
 (gs_env) [ml8347@gr019 gs_profile]$ 
+
+------------------------------------------------------------------------------------------------
+(gs_env) [ml8347@gr019 gs_profile]$ cd /vast/ml8347/ml_sys/final_project/gs_profile
+nsys profile \
+    --output=/vast/ml8347/ml_sys/final_project/log/profile_nsys/gs_profile_$(date +%Y%m%d_%H%M%S) \
+    --force-overwrite=true \
+    --trace=cuda,nvtx,osrt \
+    --cuda-memory-usage=true \
+    --gpu-metrics-device=all \
+    python render_fps.py -m /vast/ml8347/ml_sys/final_project/assets/garden_3dgs --iteration 30000
+GPU 0: General Metrics for NVIDIA TU10x (any frequency)
+Looking for config file in /vast/ml8347/ml_sys/final_project/assets/garden_3dgs/cfg_args
+Config file found: /vast/ml8347/ml_sys/final_project/assets/garden_3dgs/cfg_args
+Rendering /vast/ml8347/ml_sys/final_project/assets/garden_3dgs
+Loading trained model at iteration 30000 [02/12 17:26:27]
+------------LLFF HOLD------------- [02/12 17:26:29]
+Reading camera 185/185 [02/12 17:26:29]
+Loading Training Cameras [02/12 17:26:29]
+[ INFO ] Encountered quite large input images (>1.6K pixels width), rescaling to 1.6K.
+ If this is not desired, please explicitly specify '--resolution/-r' as 1 [02/12 17:26:29]
+Loading Test Cameras [02/12 17:27:57]
+Warm up [02/12 17:28:17]
+Rendering progress: 100%|██████████| 161/161 [00:04<00:00, 34.48it/s]image shape: torch.Size([3, 1036, 1600]) [02/12 17:28:18]
+psnrs= tensor(29.7456) [02/12 17:28:22]
+fps= tensor(35.0086) [02/12 17:28:22]
+time= tensor(0.0286) [02/12 17:28:22]
+Warm up [02/12 17:28:22]
+
+Rendering progress: 100%|██████████| 24/24 [00:00<00:00, 34.48it/s]
+image shape: torch.Size([3, 1036, 1600]) [02/12 17:28:22]
+psnrs= tensor(27.3802) [02/12 17:28:23]
+fps= tensor(35.0022) [02/12 17:28:23]
+time= tensor(0.0286) [02/12 17:28:23]
+Generating '/tmp/nsys-report-36f4.qdstrm'
+[1/1] [========================100%] gs_profile_20251202_172624.nsys-rep
+Generated:
+    /vast/ml8347/ml_sys/final_project/log/profile_nsys/gs_profile_20251202_172624.nsys-rep
+(gs_env) [ml8347@gr019 gs_profile]$ 
+
+------------------------------------------------------------------------------------------------
+(tcgs_env) [ml8347@gr019 tcgs_profile]$ cd /vast/ml8347/ml_sys/final_project/tcgs_profile
+nsys profile \
+    --output=/vast/ml8347/ml_sys/final_project/log/profile_nsys/tcgs_profile_$(date +%Y%m%d_%H%M%S) \
+    --force-overwrite=true \
+    --trace=cuda,nvtx,osrt \
+    --cuda-memory-usage=true \
+    --gpu-metrics-device=all \
+    python render.py -m /vast/ml8347/ml_sys/final_project/assets/garden_3dgs --iteration 30000
+GPU 0: General Metrics for NVIDIA TU10x (any frequency)
+Looking for config file in /vast/ml8347/ml_sys/final_project/assets/garden_3dgs/cfg_args
+Config file found: /vast/ml8347/ml_sys/final_project/assets/garden_3dgs/cfg_args
+Rendering /vast/ml8347/ml_sys/final_project/assets/garden_3dgs
+args.images: images
+Loading trained model at iteration 30000 [02/12 17:29:22]
+------------LLFF HOLD------------- [02/12 17:29:23]
+Reading camera 185/185 [02/12 17:29:23]
+Loading Training Cameras [02/12 17:29:23]
+[ INFO ] Encountered quite large input images (>1.6K pixels width), rescaling to 1.6K.
+ If this is not desired, please explicitly specify '--resolution/-r' as 1 [02/12 17:29:23]
+Loading Test Cameras [02/12 17:30:51]
+Warm up [02/12 17:31:11]
+Rendering progress: 100%|██████████| 161/161 [00:03<00:00, 47.54it/s]image shape: torch.Size([3, 1036, 1600]) [02/12 17:31:11]
+psnrs= tensor(29.7256) [02/12 17:31:14]
+fps= tensor(123.8994) [02/12 17:31:14]
+time= tensor(0.0081) [02/12 17:31:14]
+Warm up [02/12 17:31:14]
+
+Rendering progress: 100%|██████████| 24/24 [00:00<00:00, 47.34it/s]
+image shape: torch.Size([3, 1036, 1600]) [02/12 17:31:14]
+psnrs= tensor(27.3672) [02/12 17:31:15]
+fps= tensor(123.8284) [02/12 17:31:15]
+time= tensor(0.0081) [02/12 17:31:15]
+Generating '/tmp/nsys-report-b2b9.qdstrm'
+[1/1] [========================100%] tcgs_profile_20251202_172918.nsys-rep
+Generated:
+    /vast/ml8347/ml_sys/final_project/log/profile_nsys/tcgs_profile_20251202_172918.nsys-rep
+(tcgs_env) [ml8347@gr019 tcgs_profile]$ 
