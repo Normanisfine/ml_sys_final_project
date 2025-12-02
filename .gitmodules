@@ -1,0 +1,6 @@
+[submodule "gs_profile"]
+	path = gs_profile
+	url = https://github.com/Normanisfine/gs_profile.git
+[submodule "tcgs_profile"]
+	path = tcgs_profile
+	url = https://github.com/Normanisfine/tcgs_profile.git

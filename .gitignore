@@ -1,0 +1,8 @@
+assets/
+envs/
+log/
+*.pyc
+__pycache__/
+.DS_Store
+gs_profile_backup/
+tcgs_profile_backup/
