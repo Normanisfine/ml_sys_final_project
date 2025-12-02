@@ -1,0 +1,52 @@
+# tcgs profile
+(tcgs_env) [ml8347@gr019 tcgs_profile]$ python render.py -m /vast/ml8347/ml_sys/final_project/assets/garden_3dgs --iteration 30000
+Looking for config file in /vast/ml8347/ml_sys/final_project/assets/garden_3dgs/cfg_args
+Config file found: /vast/ml8347/ml_sys/final_project/assets/garden_3dgs/cfg_args
+Rendering /vast/ml8347/ml_sys/final_project/assets/garden_3dgs
+args.images: images
+Loading trained model at iteration 30000 [02/12 16:47:13]
+------------LLFF HOLD------------- [02/12 16:47:14]
+Reading camera 185/185 [02/12 16:47:14]
+Loading Training Cameras [02/12 16:47:14]
+[ INFO ] Encountered quite large input images (>1.6K pixels width), rescaling to 1.6K.
+ If this is not desired, please explicitly specify '--resolution/-r' as 1 [02/12 16:47:14]
+Loading Test Cameras [02/12 16:48:51]
+Warm up [02/12 16:49:14]
+Rendering progress:   0%|                                                                   | 0/161 [00:00<?, ?it/s]image shape: torch.Size([3, 1036, 1600]) [02/12 16:49:14]
+Rendering progress: 100%|█████████████████████████████████████████████████████████| 161/161 [00:03<00:00, 48.17it/s]
+psnrs= tensor(29.7256) [02/12 16:49:17]
+fps= tensor(124.2325) [02/12 16:49:17]
+time= tensor(0.0081) [02/12 16:49:17]
+Warm up [02/12 16:49:17]
+Rendering progress:   0%|                                                                    | 0/24 [00:00<?, ?it/s]image shape: torch.Size([3, 1036, 1600]) [02/12 16:49:18]
+Rendering progress: 100%|███████████████████████████████████████████████████████████| 24/24 [00:00<00:00, 48.40it/s]
+psnrs= tensor(27.3672) [02/12 16:49:18]
+fps= tensor(124.9193) [02/12 16:49:18]
+time= tensor(0.0080) [02/12 16:49:18]
+(tcgs_env) [ml8347@gr019 tcgs_profile]$ 
+
+------------------------------------------------------------------------------------------------
+(gs_env) [ml8347@gr019 gs_profile]$ python render_fps.py -m /vast/ml8347/ml_sys/final_project/assets/garden_3dgs --iteration 30000
+Looking for config file in /vast/ml8347/ml_sys/final_project/assets/garden_3dgs/cfg_args
+Config file found: /vast/ml8347/ml_sys/final_project/assets/garden_3dgs/cfg_args
+Rendering /vast/ml8347/ml_sys/final_project/assets/garden_3dgs
+Loading trained model at iteration 30000 [02/12 16:51:14]
+------------LLFF HOLD------------- [02/12 16:51:15]
+Reading camera 185/185 [02/12 16:51:15]
+Loading Training Cameras [02/12 16:51:15]
+[ INFO ] Encountered quite large input images (>1.6K pixels width), rescaling to 1.6K.
+ If this is not desired, please explicitly specify '--resolution/-r' as 1 [02/12 16:51:15]
+Loading Test Cameras [02/12 16:52:39]
+Warm up [02/12 16:52:58]
+Rendering progress:   0%|                                                                   | 0/161 [00:00<?, ?it/s]image shape: torch.Size([3, 1036, 1600]) [02/12 16:52:58]
+Rendering progress: 100%|█████████████████████████████████████████████████████████| 161/161 [00:04<00:00, 34.79it/s]
+psnrs= tensor(29.7456) [02/12 16:53:03]
+fps= tensor(35.3003) [02/12 16:53:03]
+time= tensor(0.0284) [02/12 16:53:03]
+Warm up [02/12 16:53:03]
+Rendering progress:   0%|                                                                    | 0/24 [00:00<?, ?it/s]image shape: torch.Size([3, 1036, 1600]) [02/12 16:53:03]
+Rendering progress: 100%|███████████████████████████████████████████████████████████| 24/24 [00:00<00:00, 34.85it/s]
+psnrs= tensor(27.3802) [02/12 16:53:04]
+fps= tensor(35.3583) [02/12 16:53:04]
+time= tensor(0.0283) [02/12 16:53:04]
+(gs_env) [ml8347@gr019 gs_profile]$ 
