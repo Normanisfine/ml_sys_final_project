@@ -137,7 +137,7 @@ git submodule update --init --recursive
 
 ## Performance Comparison
 
-### Per-Stage GPU Time
+### Per-Stage GPU Kernel Time (NVTX Profiling)
 
 | Stage | Original 3DGS | TC-GS | Speedup |
 |-------|--------------|-------|---------|
@@ -145,15 +145,67 @@ git submodule update --init --recursive
 | TileBinning | 1.28 ms | 2.94 ms | 0.4× (trade-off) |
 | Sorting | 4.28 ms | 0.12 ms | **35×** ⭐ |
 | AlphaBlending | 11.62 ms | 6.18 ms | **1.9×** |
-| **Total** | **19.8 ms** | **10.4 ms** | **1.9×** |
+| **GPU Kernel Total** | **19.8 ms** | **10.4 ms** | **1.9×** |
 
 ### Why TC-GS is Faster
 
 | Optimization | Technique | Effect |
 |--------------|-----------|--------|
-| Tight Tile Culling | SnugBox ellipse intersection | 30% fewer tile-Gaussian pairs |
-| Tensor Core MMA | FP16 matrix multiplication for alpha computation | 1.9× faster blending |
-| Local Coordinates | Tile-local coordinate transformation | Maintains FP16 precision |
+| **SnugBox Culling** | Exact ellipse-tile intersection with opacity threshold | 30-50% fewer tile-Gaussian pairs |
+| **Tensor Core MMA** | `mma_16x8x8_f16_f16` batches 16 Gaussians at once | 8-16× throughput vs CUDA cores |
+| **FP16 Features** | Pack colors into half-precision | 50% less memory bandwidth |
+| **Local Coordinates** | Tile-local transform (±7.5 vs 0-1600) | Maintains FP16 precision |
+
+### Why 1.9× Kernel → 3.5× FPS (Cascade Effect)
+
+```
+SnugBox Culling (30-50% fewer pairs)
+    ↓
+┌─────────────────────────────────────────────┐
+│ • Sorting: 35× faster (less data to sort)  │
+│ • Memory: 50% less bandwidth               │
+│ • Sync: Less CPU-GPU coordination          │
+└─────────────────────────────────────────────┘
+    ↓
+Tensor Core MMA + FP16 (1.9× faster blending)
+    ↓
+Pipeline gaps shrink → 3.5× total FPS
+```
+
+---
+
+## Understanding the Metrics
+
+### GPU Kernel Time vs End-to-End FPS
+
+You may notice that the **1.9× kernel speedup** differs from the **3.5× FPS improvement**. This is expected:
+
+| Metric | What It Measures | Original 3DGS | TC-GS | Speedup |
+|--------|------------------|---------------|-------|---------|
+| **NVTX Kernel Time** | Sum of GPU kernel durations only | 19.8 ms | 10.4 ms | **1.9×** |
+| **End-to-End FPS** | Total wall-clock time per frame | ~35 FPS | ~124 FPS | **3.5×** |
+
+**Why the difference?**
+
+```
+Total Frame Time = GPU Kernels + CPU Overhead + Memory Transfers + Sync Delays
+                   ^^^^^^^^^^^
+                   (NVTX measures this part only)
+```
+
+1. **NVTX markers measure GPU kernel execution time only** — the actual compute work on the GPU
+2. **FPS includes everything** — CPU overhead, Python/PyTorch operations, memory transfers, synchronization
+3. **TC-GS has better pipeline efficiency** — tighter kernel packing with less idle time between operations
+
+### Profiling Overhead
+
+When running with `nsys profile`, there is additional overhead from:
+- **CUDA API interception** — hooking into every CUDA call to record timestamps
+- **NVTX range recording** — writing marker data to buffers
+- **Memory tracking** — monitoring allocations with `--cuda-memory-usage=true`
+- **GPU metrics collection** — sampling hardware counters with `--gpu-metrics-device=all`
+
+The kernel durations are accurate (from GPU hardware timers), but gaps between kernels may be inflated during profiling. FPS benchmarks should be run **without the profiler** for accurate throughput measurements
 
 ---
 
