@@ -118,14 +118,14 @@ git submodule update --init --recursive
 
 | File | Description |
 |------|-------------|
-| [`gs_profile/submodules/diff-gaussian-rasterization/NVTX_MARKERS.md`](gs_profile/submodules/diff-gaussian-rasterization/NVTX_MARKERS.md) | NVTX markers for original 3DGS |
-| [`tcgs_profile/submodules/tcgs_speedy_rasterizer/NVTX_MARKERS.md`](tcgs_profile/submodules/tcgs_speedy_rasterizer/NVTX_MARKERS.md) | NVTX markers for TC-GS |
+| [`gs_profile/submodules/diff-gaussian-rasterization/NVTX_MARKERS.md`](https://github.com/Normanisfine/gs_profile/blob/main/submodules/diff-gaussian-rasterization/NVTX_MARKERS.md) | NVTX markers for original 3DGS |
+| [`tcgs_profile/submodules/tcgs_speedy_rasterizer/NVTX_MARKERS.md`](https://github.com/Normanisfine/tcgs_profile/blob/main/submodules/tcgs_speedy_rasterizer/NVTX_MARKERS.md) | NVTX markers for TC-GS |
 
 ### 📝 Changelogs & Fixes
 
 | File | Description |
 |------|-------------|
-| [`tcgs_profile/CHANGELOG.md`](tcgs_profile/CHANGELOG.md) | CUDA 11.6 compatibility fix for `__hmin` intrinsic |
+| [`tcgs_profile/CHANGELOG.md`](https://github.com/Normanisfine/tcgs_profile/blob/main/CHANGELOG.md) | CUDA 11.6 compatibility fix for `__hmin` intrinsic |
 
 ### ⚙️ Environment Setup
 
