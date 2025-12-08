@@ -213,6 +213,10 @@ The kernel durations are accurate (from GPU hardware timers), but gaps between k
 
 ### 1. Environment Setup
 
+This project supports two deployment environments: **HPC Cluster** (using Conda) and **Burst** (using Singularity containers).
+
+#### Option A: HPC Cluster Setup
+
 ```bash
 # Load modules (on HPC cluster)
 module purge
@@ -224,8 +228,93 @@ export CONDA_PKGS_DIRS="/vast/ml8347/ml_sys/final_project/envs/.conda/pkgs"
 export CONDA_ENVS_DIRS="/vast/ml8347/ml_sys/final_project/envs/.conda/envs"
 ```
 
+#### Option B: Burst (Singularity Container) Setup
+
+If you're using a Singularity container on Burst, follow these steps:
+
+**1. Check System Python**
+
+```bash
+python3 --version
+which python3
+```
+
+**2. Create Virtual Environment (using venv, not conda)**
+
+```bash
+python3 -m venv gaussian_splatting_env
+source gaussian_splatting_env/bin/activate
+```
+
+**3. Install PyTorch (using system CUDA 12.6)**
+
+```bash
+pip install torch --index-url https://download.pytorch.org/whl/cu121
+pip install torchvision
+pip install torchaudio
+```
+
+**4. Install Other Dependencies**
+
+```bash
+pip install opencv-python joblib numpy plyfile tqdm
+```
+
+**5. Set Environment Variables (using system CUDA and GCC)**
+
+```bash
+export CUDA_HOME=/usr/local/cuda-12.6
+export PATH=$CUDA_HOME/bin:$PATH
+export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+export TORCH_CUDA_ARCH_LIST="7.0;7.5;8.0;8.6;8.9;9.0"
+```
+
+**6. Check System GCC Version**
+
+```bash
+gcc --version  # Should be gcc version 11.x
+```
+
+**7. Fix GCC Compatibility (if GCC is too new)**
+
+If your GCC version is too new, modify `setup.py` to add `-allow-unsupported-compiler`:
+
+```bash
+cd /path/to/tcgs_profile/submodules/tcgs_speedy_rasterizer
+
+# Backup original file
+cp setup.py setup.py.bak
+```
+
+Then modify the `extra_compile_args` in `setup.py`:
+
+```python
+extra_compile_args={
+    "nvcc": [
+        "--expt-relaxed-constexpr",
+        "--ptxas-options=-v",
+        "-DTCGS_ENABLED=1",
+        "-allow-unsupported-compiler",  # Add this if GCC is too new
+        "-arch=sm_75",  # Only compile for sm_75 and above
+    ],
+    "cxx": ["-DTCGS_ENABLED=1"]
+}
+```
+
+**Note on Tensor Core Support**: The TC-GS code uses Tensor Core features (e.g., `ldmatrix`) that require sm_75 or higher. sm_70 does not support these features. Make sure to remove sm_70 (compute_70) from the compilation architecture list if it's present.
+
+**8. Install Extensions**
+
+```bash
+# From the project root or tcgs_profile directory
+pip install --no-build-isolation submodules/simple-knn
+pip install --no-build-isolation submodules/fused-ssim
+pip install --no-build-isolation submodules/tcgs_speedy_rasterizer
+```
+
 ### 2. Install Original 3DGS
 
+**For HPC:**
 ```bash
 cd gs_profile
 conda activate /vast/ml8347/ml_sys/final_project/envs/gs_env
@@ -233,11 +322,28 @@ pip install submodules/diff-gaussian-rasterization
 pip install submodules/simple-knn submodules/fused-ssim
 ```
 
+**For Burst:**
+```bash
+cd gs_profile
+# Ensure virtual environment is activated
+pip install submodules/diff-gaussian-rasterization
+pip install submodules/simple-knn submodules/fused-ssim
+```
+
 ### 3. Install TC-GS
 
+**For HPC:**
 ```bash
 cd tcgs_profile
 conda activate /vast/ml8347/ml_sys/final_project/envs/tcgs_env
+pip install submodules/tcgs_speedy_rasterizer
+pip install submodules/simple-knn submodules/fused-ssim
+```
+
+**For Burst:**
+```bash
+cd tcgs_profile
+# Ensure virtual environment is activated
 pip install submodules/tcgs_speedy_rasterizer
 pip install submodules/simple-knn submodules/fused-ssim
 ```
